@@ -24,8 +24,10 @@ public class ARLoginSyncModules
     public FirebaseFirestore FirebaseFirestore;
     public DatabaseReference DatabaseReference;
 
-    public void SyncFirebase()
+    public IEnumerator SyncFirebase()
     {
+        bool isDone = false;
+
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             FirebaseApp app = FirebaseApp.DefaultInstance;
@@ -33,9 +35,14 @@ public class ARLoginSyncModules
             if (task.IsCompleted)
             {
                 this.FirebaseFirestore = FirebaseFirestore.DefaultInstance;
+
                 SyncData();
+
+                isDone = true;
             }
         });
+
+        yield return new WaitUntil(() => isDone);
     }
 
     public void SyncData()

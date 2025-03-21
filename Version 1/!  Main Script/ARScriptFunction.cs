@@ -28,8 +28,6 @@ public class ARScriptFunction
 
     public void Start()
     {
-        Debug.Log("Started");
-
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             FirebaseApp app = FirebaseApp.DefaultInstance;
@@ -48,9 +46,9 @@ public class ARScriptFunction
         {
             foreach (DocumentChange change in snapshot.GetChanges()) 
             {
-                this.ARScriptHolderMain.ARScriptSyncAchievementsObtained.SyncFirebase();
-                this.ARScriptHolderMain.ARScriptSyncFinishedCourse.SyncFirebase();
-                this.ARScriptHolderMain.ARScriptSyncFinishedQuiz.SyncFirebase();
+                this.ARScriptHolderMain.StartCoroutine(this.ARScriptHolderMain.ARScriptSyncAchievementsObtained.SyncFirebase());
+                this.ARScriptHolderMain.StartCoroutine(this.ARScriptHolderMain.ARScriptSyncFinishedCourse.SyncFirebase());
+                this.ARScriptHolderMain.StartCoroutine(this.ARScriptHolderMain.ARScriptSyncFinishedQuiz.SyncFirebase());
             }
         });
     }

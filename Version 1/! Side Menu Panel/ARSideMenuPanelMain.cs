@@ -56,6 +56,8 @@ public class ARSideMenuPanelMain : MonoBehaviour, IPointerClickHandler
         this.SettingsButton.onClick.AddListener(SettingsClicked);
 
         this.ARMainMenuMain = GameObject.Find("MainMenu_Panel").GetComponent<ARMainMenuMain>();
+
+        this.CurrentActivePanel = this.ARMainMenuMain.CurrentActivePanel;
     }
 
     public void DashboardClicked()
@@ -70,8 +72,11 @@ public class ARSideMenuPanelMain : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        this.CurrentActivePanel = ActivePanels.Dashboard;
+        this.ARMainMenuMain.CurrentActivePanel = ActivePanels.Dashboard;
         this.ARMainMenuMain.ChangeTopLabel("Dashboard");
+
+        // Create Dashboard Panel
+        this.ARMainMenuMain.ARMainMenuPanels.CreateDashboardPanel();
 
         this.Animator.SetTrigger("Close");
         Destroy(this.thisParentObject, 0.6f);
@@ -89,9 +94,10 @@ public class ARSideMenuPanelMain : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        this.CurrentActivePanel = ActivePanels.Courses;
+        this.ARMainMenuMain.CurrentActivePanel = ActivePanels.Courses;
         this.ARMainMenuMain.ChangeTopLabel("Courses");
 
+        // Create Courses Panel
         this.ARMainMenuMain.ARMainMenuPanels.CreateCoursesPanel();
 
         this.Animator.SetTrigger("Close");
@@ -110,7 +116,7 @@ public class ARSideMenuPanelMain : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        this.CurrentActivePanel = ActivePanels.CyberNews;
+        this.ARMainMenuMain.CurrentActivePanel = ActivePanels.CyberNews;
         this.ARMainMenuMain.ChangeTopLabel("CyberNews");
 
         this.Animator.SetTrigger("Close");
@@ -129,7 +135,7 @@ public class ARSideMenuPanelMain : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        this.CurrentActivePanel = ActivePanels.Profile;
+        this.ARMainMenuMain.CurrentActivePanel = ActivePanels.Profile;
         this.ARMainMenuMain.ChangeTopLabel("Profile");
 
         this.Animator.SetTrigger("Close");

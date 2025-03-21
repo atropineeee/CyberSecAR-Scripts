@@ -9,10 +9,10 @@ using UnityEngine.UI;
 public class ARSelectedModuleMain : MonoBehaviour
 {
     [Header("Parent Object")]
-    [SerializeField] protected GameObject thisParentObject;
-    [SerializeField] protected TMP_Text thisLessonTitle;
+    [SerializeField] public GameObject thisParentObject;
+    [SerializeField] public TMP_Text thisLessonTitle;
     [SerializeField] public TMP_Text thisLessonContent;
-    [SerializeField] protected Animator thisAnimator;
+    [SerializeField] public Animator thisAnimator;
 
     [SerializeField] protected Button thisPreviousButton;
     [SerializeField] protected Button thisNextButton;
@@ -72,6 +72,7 @@ public class ARSelectedModuleMain : MonoBehaviour
 
         this.thisPreviousButton.onClick.AddListener(PreviousModule);
         this.thisNextButton.onClick.AddListener(NextModule);
+        this.thisBackButton.onClick.AddListener(this.ARSelectedModuleMenu.CloseThisMenu);
 
         this.thisMenuButton.onClick.AddListener(this.ARSelectedModuleMenu.OpenMenu);
         this.thisReturnButton.onClick.AddListener(this.ARSelectedModuleMenu.CloseMenu);
@@ -91,6 +92,8 @@ public class ARSelectedModuleMain : MonoBehaviour
                 this.currentModuleContent = mdl.ModuleLessons[this.currentModuleInt].LessonContent;
                 this.currentModuleNumber = mdl.ModuleLessons[this.currentModuleInt].LessonID;
 
+                SyncUpdate();
+
                 RefreshText();
             }
         }
@@ -109,6 +112,8 @@ public class ARSelectedModuleMain : MonoBehaviour
                 this.currentModuleContent = mdl.ModuleLessons[this.currentModuleInt].LessonContent;
                 this.currentModuleNumber = mdl.ModuleLessons[this.currentModuleInt].LessonID;
 
+                SyncUpdate();
+
                 RefreshText();
             }
         }
@@ -121,6 +126,26 @@ public class ARSelectedModuleMain : MonoBehaviour
 
         this.thisLessonTitle.text = this.currentModuleTitle;
         this.thisLessonContent.text = this.currentModuleContent;
+    }
+
+    private void SyncUpdate()
+    {
+        GameObject find = GameObject.Find("LessonList_CenteredScrollList");
+
+        foreach (Transform child in find.transform)
+        {
+            ARLessonContentMain script = child.GetComponent<ARLessonContentMain>();
+            if (script.thisCourseName == this.currentCourseName)
+            {
+                if (script.thisModuleName == this.currentModuleTitle)
+                {
+                    if (!script.IsFinished && script.IsPreviousFinished)
+                    {
+                        script.ARLessonContentUpdate.SyncFirebase();
+                    }
+                }
+            }
+        }
     }
     
     public IEnumerator ResetClicked()

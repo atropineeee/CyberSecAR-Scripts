@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using System;
 using Firebase.Extensions;
 using TMPro;
+using System.Security.Cryptography.X509Certificates;
 
 public class ARLoginPanelMain : MonoBehaviour
 {
@@ -158,23 +159,8 @@ public class ARLoginPanelMain : MonoBehaviour
                                 this.PlayerData.User_Email = StoredEmail;
                                 this.PlayerData.User_Password = StoredPassword;
                                 this.PlayerData.User_FullName = StoredName;
-                                AddUserToRecords(StoredEmail, StoredName);
-                                ResetEmail();
-                                ResetPassword();
 
-                                // Sync Normal Data
-                                this.ARLoginSyncQuiz.SyncFirebase();
-                                this.ARLoginSyncModules.SyncFirebase();
-                                this.ARLoginSyncAchievements.SyncFirebase();
-
-                                // Sync Player Data
-                                this.ARScriptHolderMain.ARScriptSyncFinishedQuiz.SyncFirebase();
-                                this.ARScriptHolderMain.ARScriptSyncFinishedCourse.SyncFirebase();
-                                this.ARScriptHolderMain.ARScriptSyncAchievementsObtained.SyncFirebase();
-
-                                this.ARScriptHolderMain.ARScriptPanel.OpenMainMenuPanel();
-
-                                CloseThis();
+                                StartCoroutine(SyncAllData(StoredEmail, StoredName));
                             }
                             else if (UserEmail == StoredEmail && Password != StoredPassword)
                             {
@@ -203,6 +189,27 @@ public class ARLoginPanelMain : MonoBehaviour
                 Debug.Log("Warning 2");
             }
         });
+    }
+
+    private IEnumerator SyncAllData(string StoredEmail, string StoredName)
+    {
+        // Sync Normal Data
+        yield return StartCoroutine(this.ARLoginSyncQuiz.SyncFirebase());
+        yield return StartCoroutine(this.ARLoginSyncModules.SyncFirebase());
+        yield return StartCoroutine(this.ARLoginSyncAchievements.SyncFirebase());
+
+        // Sync Player Data
+        yield return StartCoroutine(this.ARScriptHolderMain.ARScriptSyncFinishedQuiz.SyncFirebase());
+        yield return StartCoroutine(this.ARScriptHolderMain.ARScriptSyncFinishedCourse.SyncFirebase());
+        yield return StartCoroutine(this.ARScriptHolderMain.ARScriptSyncAchievementsObtained.SyncFirebase());
+
+        this.ARScriptHolderMain.ARScriptPanel.OpenMainMenuPanel();
+
+        AddUserToRecords(StoredEmail, StoredName);
+        ResetEmail();
+        ResetPassword();
+
+        CloseThis();
     }
 
     private void AddUserToRecords(string DatabaseEmail, string DatabaeName)

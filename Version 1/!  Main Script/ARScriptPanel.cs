@@ -15,7 +15,7 @@ public class ARScriptPanel
     #endregion
 
     [Header("Prefab Objects")]
-    [SerializeField] protected GameObject AR_LoginPanel;
+    [SerializeField] protected GameObject AR_SignInPanel;
     [SerializeField] protected GameObject AR_MainMenuPanel;
 
     [Header("Built-In Objects")]
@@ -30,7 +30,7 @@ public class ARScriptPanel
     public void Start()
     {
         // Prefab Objects
-        AR_LoginPanel = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Login Panel/Login_Panel");
+        AR_SignInPanel = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Login Panel/SignIn_Panel");
         AR_MainMenuPanel = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/MainMenu_Panel");
 
         // Built-In Objects
@@ -42,17 +42,17 @@ public class ARScriptPanel
         AR_NonSafeAreaPanel = GameObject.Find("NonSafeAreaPanel");
         AR_SafeAreaPanel = GameObject.Find("SafeAreaPanel");
 
-        //OpenLoginPanel();
+        OpenSignInPanel();
         CloseCamera();
     }
 
-    public void OpenLoginPanel()
+    public void OpenSignInPanel()
     {
         ResetPanels();
 
-        GameObject create = ARScriptHolderMain.Instantiate(AR_LoginPanel);
+        GameObject create = ARScriptHolderMain.Instantiate(AR_SignInPanel);
         create.transform.SetParent(this.AR_SafeAreaPanel.transform, false);
-        create.name = "Login_Panel";
+        create.name = "SignIn_Panel";
     }
 
     public void OpenMainMenuPanel()

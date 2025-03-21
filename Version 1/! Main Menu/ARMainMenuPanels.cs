@@ -17,6 +17,10 @@ public class ARMainMenuPanels
     public void CreateDashboardPanel()
     {
         ARMainMenuMain.ResetCenterPanel();
+
+        GameObject create = ARMainMenuMain.Instantiate(this.ARMainMenuMain.DashboardPrefab);
+        create.transform.SetParent(this.ARMainMenuMain.CenterPanelLoc.transform, false);
+        create.name = "Dashboard_Panel";
     }
 
     public void CreateCoursesPanel()
@@ -25,6 +29,7 @@ public class ARMainMenuPanels
 
         GameObject create = ARMainMenuMain.Instantiate(this.ARMainMenuMain.CoursesPrefab);
         create.transform.SetParent(this.ARMainMenuMain.CenterPanelLoc.transform, false);
+        create.name = "CoursesMenu_Panel";
     }
 
     public void CreateCyberNewsPanel()

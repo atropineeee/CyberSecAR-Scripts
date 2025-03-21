@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ public class ARLessonListMain : MonoBehaviour
     [SerializeField] protected TMP_Text thisModuleNameTMP;
 
     [SerializeField] protected GameObject LessonListLoc;
+    [SerializeField] protected GameObject LessonFinPrefab;
     [SerializeField] protected GameObject LessonListPrefab;
 
     [Header("Contents")]
@@ -33,6 +35,7 @@ public class ARLessonListMain : MonoBehaviour
         this.thisModuleNameTMP = this.thisParentObject.transform.Find("LessonList_CenterMainPanel/LessonList_CenterTopPanel/LessonList_ModuleNameTMP").GetComponent<TMP_Text>();
         this.LessonListLoc = this.thisParentObject.transform.Find("LessonList_CenterMainPanel/LessonList_CenteredMainPanel/LessonList_CenteredScrollRect/LessonList_CenteredScrollList").gameObject;
 
+        this.LessonFinPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Lesson Menu Panel/LessonList_CenteredContentF");
         this.LessonListPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Lesson Menu Panel/LessonList_CenteredContent");
 
         this.PlayerData = Resources.Load<PlayerDataSO>("! Scriptable Objects/Player Data/PlayerData");
@@ -45,8 +48,10 @@ public class ARLessonListMain : MonoBehaviour
         this.thisModuleNameTMP.text = this.ModuleName + "\n" + LessonCount + " Modules";
     }
 
-    private void CreateLessonsList()
+    public void CreateLessonsList()
     {
+        ResetList();
+
         this.LessonCount = 0;
 
         foreach (var LessonList in this.ModulesData.ModuleList)
@@ -122,9 +127,25 @@ public class ARLessonListMain : MonoBehaviour
                         }
                     }
 
+                    if (this.Finished.All(f => f))
+                    {
+                        GameObject create2 = Instantiate(this.LessonFinPrefab);
+                        create2.transform.SetParent(this.LessonListLoc.transform, false);
+                        ARLessonFinished script2 = create2.GetComponent<ARLessonFinished>();
+                        script2.thisCourseName = this.ModuleName;
+                    }
+
                     this.LessonCount++;
                 }
             }
+        }
+    }
+
+    private void ResetList()
+    {
+        foreach (Transform child in this.LessonListLoc.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 

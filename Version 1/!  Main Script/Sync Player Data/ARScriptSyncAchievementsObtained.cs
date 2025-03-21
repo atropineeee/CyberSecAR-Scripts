@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Extensions;
+using System.Threading.Tasks;
 
 [Serializable]
 public class ARScriptSyncAchievementsObtained
@@ -24,8 +25,10 @@ public class ARScriptSyncAchievementsObtained
     public FirebaseFirestore FirebaseFirestore;
     public DatabaseReference DatabaseReference;
 
-    public void SyncFirebase()
+    public IEnumerator SyncFirebase()
     {
+        bool isDone = false;
+
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             FirebaseApp app = FirebaseApp.DefaultInstance;
@@ -33,9 +36,14 @@ public class ARScriptSyncAchievementsObtained
             if (task.IsCompleted)
             {
                 this.FirebaseFirestore = FirebaseFirestore.DefaultInstance;
+
                 SyncData();
+
+                isDone = true;
             }
         });
+
+        yield return new WaitUntil(() => isDone);
     }
 
     private void SyncData()

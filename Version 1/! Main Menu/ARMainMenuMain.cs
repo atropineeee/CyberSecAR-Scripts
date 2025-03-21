@@ -30,6 +30,7 @@ public class ARMainMenuMain : MonoBehaviour
     [SerializeField] protected bool IsClicked = false;
 
     [SerializeField] public ARMainMenuPanels ARMainMenuPanels;
+    [SerializeField] public ActivePanels CurrentActivePanel;
 
     private void Start()
     {
@@ -42,6 +43,7 @@ public class ARMainMenuMain : MonoBehaviour
         this.NonSafeAreaPanel = GameObject.Find("NonSafeAreaPanel");
         this.SafeAreaPanel = GameObject.Find("SafeAreaPanel");
 
+        this.DashboardPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Dashboard Panel/Dashboard_Panel");
         this.CoursesPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Courses Panel/CoursesMenu_Panel");
 
         this.SidePanelPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Side Panel/SideMenu_Panel");
@@ -49,6 +51,8 @@ public class ARMainMenuMain : MonoBehaviour
         this.ARMainMenuPanels = new ARMainMenuPanels(this);
 
         this.TopPanelButton.onClick.AddListener(MenuClicked);
+
+        OpenDashboard();
     }
 
     private void MenuClicked()
@@ -60,6 +64,17 @@ public class ARMainMenuMain : MonoBehaviour
         GameObject create = Instantiate(this.SidePanelPrefab);
         create.transform.SetParent(this.SafeAreaPanel.transform, false);
         create.name = "SideMenu_Panel";
+    }
+
+    private void OpenDashboard()
+    {
+        if (this.IsClicked) { return; }
+        this.IsClicked = true;
+        StartCoroutine(ResetClicked());
+
+        GameObject create = Instantiate(this.DashboardPrefab);
+        create.transform.SetParent(this.CenterPanelLoc.transform, false);
+        create.name = "Dashboard_Panel";
     }
 
     public void ResetSafeAreaPanel()

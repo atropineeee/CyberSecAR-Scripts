@@ -16,7 +16,7 @@ public class ARLessonContentMain : MonoBehaviour
     [SerializeField] protected Image thisModuleStatusImage;
 
     [Header("Required Scripts")]
-    [SerializeField] protected ARLessonContentUpdate ARLessonContentUpdate;
+    [SerializeField] public ARLessonContentUpdate ARLessonContentUpdate;
 
     protected GameObject LessonPanelPrefab;
     protected GameObject LessonPanelLoc;
