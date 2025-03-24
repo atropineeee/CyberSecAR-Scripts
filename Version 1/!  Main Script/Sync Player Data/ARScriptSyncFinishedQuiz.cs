@@ -73,11 +73,11 @@ public class ARScriptSyncFinishedQuiz
                                 {
                                     if (Quizlist is Dictionary<string, object> quizData)
                                     {
-                                        if (quizData.ContainsKey("QuizID") && quizData["QuizID"] != null)
+                                        if (quizData.ContainsKey("CourseName") && quizData["CourseName"] != null)
                                         {
                                             PlayerDataFinishedQuiz SyncPlayerQuizes = new PlayerDataFinishedQuiz
                                             {
-                                                QuizID = quizData.ContainsKey("QuizID") ? quizData["QuizID"].ToString() : "",
+                                                CourseName = quizData.ContainsKey("CourseName") ? quizData["CourseName"].ToString() : "",
                                                 QuizScore = quizData.ContainsKey("QuizScore") ? quizData["QuizScore"].ToString() : "",
                                                 QuizQuestions = new List<PlayerDataFinishedQuizQNA>() 
                                             };
@@ -91,6 +91,7 @@ public class ARScriptSyncFinishedQuiz
                                                         PlayerDataFinishedQuizQNA SyncPlayerQNA = new PlayerDataFinishedQuizQNA
                                                         {
                                                             Question = questionData.ContainsKey("Question") ? questionData["Question"].ToString() : "",
+                                                            QuestionID = questionData.ContainsKey("QuestionID") ? questionData["QuestionID"].ToString() : "",
                                                             CurrentAnswer = questionData.ContainsKey("CurrentAnswer") ? questionData["CurrentAnswer"].ToString() : "",
                                                             QuestionChoices = new List<PlayerDataFinishedQuizQNAChoices>()
                                                         };

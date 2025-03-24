@@ -9,16 +9,12 @@ public class ARQuizMain : MonoBehaviour
     [SerializeField] protected GameObject thisParentObject;
 
     [SerializeField] protected GameObject qInstructionPrefab;
-    [SerializeField] protected GameObject qLoadingPrefab;
-    [SerializeField] protected GameObject qMainQuizPrefab;
-    [SerializeField] protected GameObject qViewQuizPrefab;
+
+    public string thisCourseName;
     private void Start()
     {
         this.thisParentObject = this.gameObject;
         this.qInstructionPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/QuizPanel/QuizInstruction_Panel");
-        this.qLoadingPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/QuizPanel/QuizLoading_Panel");
-        this.qMainQuizPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/QuizPanel/QuizStart_Panel");
-
         CreateInstructionPref();
     }
 
@@ -27,5 +23,8 @@ public class ARQuizMain : MonoBehaviour
         GameObject create = Instantiate(this.qInstructionPrefab);
         create.transform.SetParent(this.thisParentObject.transform, false);
         create.name = "QuizInstruction_Panel";
+
+        ARQuizInstructionMain script = create.GetComponent<ARQuizInstructionMain>();
+        script.thisCourseName = this.thisCourseName;
     }
 }

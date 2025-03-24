@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class PlayerDataFinishedQuiz
 {
-    public string QuizID;
+    public string CourseName;
     public string QuizScore;
     public List<PlayerDataFinishedQuizQNA> QuizQuestions;
 }
@@ -15,6 +15,7 @@ public class PlayerDataFinishedQuiz
 public class PlayerDataFinishedQuizQNA
 {
     public string Question;
+    public string QuestionID;
     public string CurrentAnswer;
     public List<PlayerDataFinishedQuizQNAChoices> QuestionChoices;
 }

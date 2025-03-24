@@ -36,6 +36,9 @@ public class ARLessonFinished : MonoBehaviour
         GameObject create = Instantiate(this.QuizMainPanelPrefab);
         create.transform.SetParent(this.QuizMainPanelPrefabLoc.transform, false);
         create.name = "QuizMain_Panel";
+
+        ARQuizMain script = create.GetComponent<ARQuizMain>();
+        script.thisCourseName = this.thisCourseName;
     }
 
     private IEnumerator ResetClick()

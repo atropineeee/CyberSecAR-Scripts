@@ -21,7 +21,15 @@ public class ARScriptHolderMain : MonoBehaviour
     private void Start()
     {
         GetRequiredComponents();
+        ResetRequiredComponents();
         StartRequiredComponents();
+    }
+
+    private void ResetRequiredComponents()
+    {
+        this.PlayerData.User_Email = "";
+        this.PlayerData.User_Password = "";
+        this.PlayerData.User_FullName = "";
     }
 
     private void GetRequiredComponents()
@@ -40,7 +48,7 @@ public class ARScriptHolderMain : MonoBehaviour
 
     private void StartRequiredComponents()
     {
-        ARScriptFunction.Start();
-        ARScriptPanel.Start();
+        this.ARScriptFunction.Start();
+        this.ARScriptPanel.Start();
     }
 }

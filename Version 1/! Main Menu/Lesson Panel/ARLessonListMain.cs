@@ -45,7 +45,7 @@ public class ARLessonListMain : MonoBehaviour
 
         CreateLessonsList();
 
-        this.thisModuleNameTMP.text = this.ModuleName + "\n" + LessonCount + " Modules";
+        this.thisModuleNameTMP.text = this.ModuleName + "\n(" + LessonCount + " Modules)";
     }
 
     public void CreateLessonsList()
