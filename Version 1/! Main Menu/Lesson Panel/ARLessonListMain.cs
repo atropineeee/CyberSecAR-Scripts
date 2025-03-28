@@ -64,6 +64,7 @@ public class ARLessonListMain : MonoBehaviour
                 {
                     GameObject create = Instantiate(this.LessonListPrefab);
                     create.transform.SetParent(this.LessonListLoc.transform, false);
+                    create.name = "LessonList_CenteredContent";
 
                     ARLessonContentMain script = create.GetComponent<ARLessonContentMain>();
                     script.thisModuleNumber = LessonData.LessonID;

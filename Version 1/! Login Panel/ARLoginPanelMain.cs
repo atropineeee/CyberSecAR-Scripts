@@ -14,10 +14,11 @@ using System.Security.Cryptography.X509Certificates;
 public class ARLoginPanelMain : MonoBehaviour
 {
     [Header("Sub Scripts")]
-    private ARLoginFunctions ARLoginFunctions;
-    private ARLoginSyncModules ARLoginSyncModules;
-    private ARLoginSyncQuiz ARLoginSyncQuiz;
-    private ARLoginSyncAchievements ARLoginSyncAchievements;
+    public ARLoginFunctions ARLoginFunctions;
+    public ARLoginSyncModules ARLoginSyncModules;
+    public ARLoginSyncQuiz ARLoginSyncQuiz;
+    public ARLoginSyncAchievements ARLoginSyncAchievements;
+    public ARLoginRememberPassword ARLoginRememberPassword;
 
     [Header("Firease Connection")]
     public DependencyStatus FirebaseStatus;
@@ -66,6 +67,7 @@ public class ARLoginPanelMain : MonoBehaviour
         this.ARLoginSyncModules = new ARLoginSyncModules(this);
         this.ARLoginSyncQuiz = new ARLoginSyncQuiz(this);
         this.ARLoginSyncAchievements = new ARLoginSyncAchievements(this);
+        this.ARLoginRememberPassword = new ARLoginRememberPassword(this);
 
         this.Animator = GetComponent<Animator>();
 
@@ -109,6 +111,7 @@ public class ARLoginPanelMain : MonoBehaviour
     {
         this.ARLoginFunctions.ResetPlayerData();
         this.ARLoginFunctions.ResetAllData();
+        this.ARLoginRememberPassword.RetrieveData();
     }
 
     private void SyncFirebase()
@@ -161,6 +164,16 @@ public class ARLoginPanelMain : MonoBehaviour
                                 this.PlayerData.User_FullName = StoredName;
 
                                 StartCoroutine(SyncAllData(StoredEmail, StoredName));
+                                
+                                if (this.rememberMe)
+                                {
+                                    this.ARLoginRememberPassword.StoreSavedData(UserEmail, Password, rememberMe);
+                                }
+                                else
+                                {
+                                    PlayerPrefs.DeleteAll();
+                                    PlayerPrefs.Save();
+                                }
                             }
                             else if (UserEmail == StoredEmail && Password != StoredPassword)
                             {

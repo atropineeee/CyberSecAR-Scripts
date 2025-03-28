@@ -41,6 +41,8 @@ public class ARDashboardProgress : MonoBehaviour
         ResetLessonPanel();
 
         this.ARMainMenuMain.ARMainMenuPanels.CreateCoursesPanel();
+        this.ARMainMenuMain.CurrentActivePanel = ActivePanels.Courses;
+        this.ARMainMenuMain.ChangeTopLabel("Courses");
 
         GameObject create = Instantiate(this.LessonListPrefab);
         create.transform.SetParent(this.MainMenuCenterLoc.transform, false);

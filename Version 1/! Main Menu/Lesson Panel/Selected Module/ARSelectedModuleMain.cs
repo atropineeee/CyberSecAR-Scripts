@@ -27,6 +27,9 @@ public class ARSelectedModuleMain : MonoBehaviour
     [SerializeField] public TMP_Text thisSliderText;
     [SerializeField] public Animator thisMenuAnimator;
 
+    [SerializeField] public GameObject VideoPrefabLoc;
+    [SerializeField] public GameObject VideoPrefab;
+
     public string currentCourseName;
     public string currentModuleTitle;
     public string currentModuleContent;
@@ -39,6 +42,7 @@ public class ARSelectedModuleMain : MonoBehaviour
     public bool IsClicked;
 
     private ARSelectedModuleMenu ARSelectedModuleMenu;
+    public ARScriptHolderMain ARScriptHolderMain;
 
     private void Start()
     {
@@ -59,9 +63,13 @@ public class ARSelectedModuleMain : MonoBehaviour
         this.thisSliderText = this.thisParentObject.transform.Find("Lesson_MenuHolder/Lesson_MenuPanel/LessonAdjust_Holder/LessonAdjust_TextTMP").GetComponent<TMP_Text>();
         this.thisMenuAnimator = this.thisParentObject.transform.Find("Lesson_MenuHolder").GetComponent<Animator>();
 
+        this.ARScriptHolderMain = GameObject.Find("ScriptsHolder").GetComponent<ARScriptHolderMain>();
+
         this.thisLessonTitle.text = this.currentModuleTitle;
         this.thisLessonContent.text = this.currentModuleContent;
         this.currentModuleInt = Convert.ToInt32(this.currentModuleNumber);
+
+        this.VideoPrefabLoc = GameObject.Find("Mid Air Stage");
 
         foreach (var mdl in this.ModulesData.ModuleList)
         {
@@ -73,6 +81,8 @@ public class ARSelectedModuleMain : MonoBehaviour
         this.thisPreviousButton.onClick.AddListener(PreviousModule);
         this.thisNextButton.onClick.AddListener(NextModule);
         this.thisBackButton.onClick.AddListener(this.ARSelectedModuleMenu.CloseThisMenu);
+        this.thisARButton.onClick.AddListener(this.ARSelectedModuleMenu.OpenARMenu);
+        this.thisARButton.onClick.AddListener(this.ARSelectedModuleMenu.CloseThisMenu);
 
         this.thisMenuButton.onClick.AddListener(this.ARSelectedModuleMenu.OpenMenu);
         this.thisReturnButton.onClick.AddListener(this.ARSelectedModuleMenu.CloseMenu);
@@ -134,14 +144,18 @@ public class ARSelectedModuleMain : MonoBehaviour
 
         foreach (Transform child in find.transform)
         {
-            ARLessonContentMain script = child.GetComponent<ARLessonContentMain>();
-            if (script.thisCourseName == this.currentCourseName)
+            if (child.name == "LessonList_CenteredContent")
             {
-                if (script.thisModuleName == this.currentModuleTitle)
+                ARLessonContentMain script = child.GetComponent<ARLessonContentMain>();
+
+                if (script.thisCourseName == this.currentCourseName)
                 {
-                    if (!script.IsFinished && script.IsPreviousFinished)
+                    if (script.thisModuleName == this.currentModuleTitle)
                     {
-                        script.ARLessonContentUpdate.SyncFirebase();
+                        if (!script.IsFinished && script.IsPreviousFinished)
+                        {
+                            script.ARLessonContentUpdate.SyncFirebase();
+                        }
                     }
                 }
             }

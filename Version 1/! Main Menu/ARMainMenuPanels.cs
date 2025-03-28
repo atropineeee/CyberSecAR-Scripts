@@ -35,6 +35,10 @@ public class ARMainMenuPanels
     public void CreateCyberNewsPanel()
     {
         ARMainMenuMain.ResetCenterPanel();
+
+        GameObject create = ARMainMenuMain.Instantiate(this.ARMainMenuMain.CyberNewsPrefab);
+        create.transform.SetParent(this.ARMainMenuMain.CenterPanelLoc.transform, false);
+        create.name = "News_Panel";
     }
 
     public void CreateProfilePanel()

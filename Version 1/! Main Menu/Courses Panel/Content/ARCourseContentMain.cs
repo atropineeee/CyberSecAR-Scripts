@@ -15,6 +15,7 @@ public class ARCourseContentMain : MonoBehaviour
     [SerializeField] protected GameObject CourseListMenuLessonPrefab;
     [SerializeField] protected TMP_Text thisCourseTMP;
     [SerializeField] protected TMP_Text thisCourseProgressTMP;
+    [SerializeField] protected Image thisStatusImage;
 
     [Header("Prefabs")]
     [SerializeField] protected GameObject MainMenuCenterLoc;
@@ -43,6 +44,7 @@ public class ARCourseContentMain : MonoBehaviour
         this.thisStartButton = this.thisParentObject.transform.Find("CoursesMenu_Holder/CoursesMenu_StartButton").GetComponent<Button>();
         this.thisCourseTMP = this.thisParentObject.transform.Find("CoursesMenu_Holder/CoursesMenu_TMP").GetComponent<TMP_Text>();
         this.thisCourseProgressTMP = this.thisParentObject.transform.Find("CoursesMenu_Holder/CoursesMenu_ProgressTMP").GetComponent<TMP_Text>();
+        this.thisStatusImage = this.thisParentObject.transform.Find("CoursesMenu_Holder/CoursesMenu_ProgressTMP/CoursesMenu_StatusImage").GetComponent<Image>();
 
         this.PlayerData = Resources.Load<PlayerDataSO>("! Scriptable Objects/Player Data/PlayerData");
         this.ModulesData = Resources.Load<ModulesSO>("! Scriptable Objects/Topics Data/TopicsData");
@@ -103,15 +105,29 @@ public class ARCourseContentMain : MonoBehaviour
                 }
             }
 
-            if (this.TotalLessons == this.FinishedLessons)
+            if (this.FinishedLessons == this.TotalLessons)
             {
+                Sprite sprite = Resources.Load<Sprite>("Textures/CompletedIcon");
+                this.thisStatusImage.sprite = sprite;
+
                 this.thisCourseProgressTMP.text = "Module Completed!";
                 this.thisCourseProgressTMP.color = Color.green;
             }
-            else
+            else if (this.FinishedLessons > 0 && this.FinishedLessons!= this.TotalLessons)
             {
+                Sprite sprite = Resources.Load<Sprite>("Textures/InProgressIcon");
+                this.thisStatusImage.sprite = sprite;
+
                 this.thisCourseProgressTMP.text = "In Progress";
                 this.thisCourseProgressTMP.color = Color.yellow;
+            }
+            else
+            {
+                this.thisStatusImage.sprite = null;
+                this.thisStatusImage.color = new Color32(0, 0 ,0 ,0);
+
+                this.thisCourseProgressTMP.text = "";
+                this.thisCourseProgressTMP.color = Color.white;
             }
         }
 

@@ -17,6 +17,7 @@ public class ARScriptPanel
     [Header("Prefab Objects")]
     [SerializeField] protected GameObject AR_SignInPanel;
     [SerializeField] protected GameObject AR_MainMenuPanel;
+    [SerializeField] protected GameObject AR_MainPanel;
 
     [Header("Built-In Objects")]
     [SerializeField] protected GameObject AR_Camera;
@@ -32,6 +33,7 @@ public class ARScriptPanel
         // Prefab Objects
         AR_SignInPanel = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Login Panel/SignIn_Panel");
         AR_MainMenuPanel = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/MainMenu_Panel");
+        AR_MainPanel = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/AR Panel/ARMain_Panel");
 
         // Built-In Objects
         AR_Camera = GameObject.Find("ARCamera");
@@ -62,6 +64,27 @@ public class ARScriptPanel
         GameObject create = ARScriptHolderMain.Instantiate(AR_MainMenuPanel);
         create.transform.SetParent(this.AR_SafeAreaPanel.transform, false);
         create.name = "MainMenu_Panel";
+    }
+
+    public void OpenARPanel(string CurrentCourse)
+    {
+        OpenCamera();
+
+        AR_BlackBG.SetActive(false);
+
+        GameObject create = ARScriptHolderMain.Instantiate(AR_MainPanel);
+        create.transform.SetParent(this.AR_SafeAreaPanel.transform, false);
+        create.name = "ARMain_Panel";
+
+        ARLocalMain script = create.GetComponent<ARLocalMain>();
+        script.CurrentCourse = CurrentCourse;
+    }
+
+    public void CloseARPanel()
+    {
+        CloseCamera();
+
+        AR_BlackBG.SetActive(true);
     }
 
     public void OpenCamera()

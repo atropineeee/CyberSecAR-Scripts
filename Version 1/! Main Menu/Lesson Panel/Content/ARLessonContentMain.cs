@@ -60,17 +60,26 @@ public class ARLessonContentMain : MonoBehaviour
         {
             if (this.IsFinished)
             {
+                Sprite sprite = Resources.Load<Sprite>("Textures/CompletedIcon");
+                this.thisModuleStatusImage.sprite = sprite;
+
                 this.thisModuleStatusTMP.text = "Completed!";
                 this.thisModuleStatusTMP.color = Color.green;
             }
             else
             {
+                Sprite sprite = Resources.Load<Sprite>("Textures/InProgressIcon");
+                this.thisModuleStatusImage.sprite = sprite;
+
                 this.thisModuleStatusTMP.text = "In Progress!";
                 this.thisModuleStatusTMP.color = Color.yellow;
             }
         }
         else
         {
+            this.thisModuleStatusImage.sprite = null;
+            this.thisModuleStatusImage.color = new Color32(0, 0, 0, 0);
+
             this.thisModuleStatusTMP.text = "";
         }
     }

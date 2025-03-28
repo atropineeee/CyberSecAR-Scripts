@@ -119,6 +119,9 @@ public class ARSideMenuPanelMain : MonoBehaviour, IPointerClickHandler
         this.ARMainMenuMain.CurrentActivePanel = ActivePanels.CyberNews;
         this.ARMainMenuMain.ChangeTopLabel("CyberNews");
 
+        // Create Cyber News Panel
+        this.ARMainMenuMain.ARMainMenuPanels.CreateCyberNewsPanel();
+
         this.Animator.SetTrigger("Close");
         Destroy(this.thisParentObject, 0.6f);
     }
