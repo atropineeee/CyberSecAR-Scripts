@@ -212,9 +212,9 @@ public class ARLoginPanelMain : MonoBehaviour
         yield return StartCoroutine(this.ARLoginSyncAchievements.SyncFirebase());
 
         // Sync Player Data
-        yield return StartCoroutine(this.ARScriptHolderMain.ARScriptSyncFinishedQuiz.SyncFirebase());
-        yield return StartCoroutine(this.ARScriptHolderMain.ARScriptSyncFinishedCourse.SyncFirebase());
-        yield return StartCoroutine(this.ARScriptHolderMain.ARScriptSyncAchievementsObtained.SyncFirebase());
+        this.ARScriptHolderMain.ARScriptSyncFinishedQuiz.SyncData();
+        this.ARScriptHolderMain.ARScriptSyncFinishedCourse.SyncData();
+        this.ARScriptHolderMain.ARScriptSyncAchievementsObtained.SyncData();
 
         this.ARScriptHolderMain.ARScriptPanel.OpenMainMenuPanel();
 

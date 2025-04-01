@@ -20,38 +20,12 @@ public class ARScriptSyncFinishedQuiz
     }
     #endregion
 
-    public DependencyStatus FirebaseStatus;
-    public FirebaseUser FirebaseUser;
-    public FirebaseFirestore FirebaseFirestore;
-    public DatabaseReference DatabaseReference;
-
-    public IEnumerator SyncFirebase()
-    {
-        bool isDone = false;
-
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
-        {
-            FirebaseApp app = FirebaseApp.DefaultInstance;
-
-            if (task.IsCompleted)
-            {
-                this.FirebaseFirestore = FirebaseFirestore.DefaultInstance;
-
-                SyncData();
-
-                isDone = true;
-            }
-        });
-
-        yield return new WaitUntil(() => isDone);
-    }
-
-    private void SyncData()
+    public void SyncData()
     {
         this.ARScriptHolderMain.PlayerData.FinishedQuizList.Clear();
         string CurrentEmail = this.ARScriptHolderMain.PlayerData.User_Email;
 
-        FirebaseFirestore.Collection("records").WhereEqualTo("email", CurrentEmail).GetSnapshotAsync().ContinueWithOnMainThread(task => 
+        this.ARScriptHolderMain.ARScriptFunction.FirebaseFirestore.Collection("records").WhereEqualTo("email", CurrentEmail).GetSnapshotAsync().ContinueWithOnMainThread(task => 
         {
             if (task.IsCompleted) 
             {

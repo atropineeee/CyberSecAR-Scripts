@@ -46,6 +46,7 @@ public class ARMainMenuMain : MonoBehaviour
         this.DashboardPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Dashboard Panel/Dashboard_Panel");
         this.CoursesPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Courses Panel/CoursesMenu_Panel");
         this.CyberNewsPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/News Panel/News_Panel");
+        this.ProfilePrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Profile Panel/Profile_Panel");
 
         this.SidePanelPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Side Panel/SideMenu_Panel");
 

@@ -44,11 +44,11 @@ public class ARScriptFunction
     {
         FirebaseListener = FirebaseFirestore.Collection("records").Listen(snapshot =>
         {
-            foreach (DocumentChange change in snapshot.GetChanges()) 
+            foreach (DocumentChange change in snapshot.GetChanges())
             {
-                this.ARScriptHolderMain.StartCoroutine(this.ARScriptHolderMain.ARScriptSyncAchievementsObtained.SyncFirebase());
-                this.ARScriptHolderMain.StartCoroutine(this.ARScriptHolderMain.ARScriptSyncFinishedCourse.SyncFirebase());
-                this.ARScriptHolderMain.StartCoroutine(this.ARScriptHolderMain.ARScriptSyncFinishedQuiz.SyncFirebase());
+                this.ARScriptHolderMain.ARScriptSyncAchievementsObtained.SyncData();
+                this.ARScriptHolderMain.ARScriptSyncFinishedCourse.SyncData();
+                this.ARScriptHolderMain.ARScriptSyncFinishedQuiz.SyncData();
             }
         });
     }

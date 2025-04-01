@@ -98,39 +98,41 @@ public class ARCourseContentMain : MonoBehaviour
             {
                 foreach (var FinishedList in this.PlayerData.FinishedCourseList)
                 {
-                    if (thisCourseContent.LessonTitle == FinishedList.LessonID)
+                    if (FinishedList.CourseID == this.ModuleName)
                     {
-                        this.FinishedLessons++;
+                        if (thisCourseContent.LessonTitle == FinishedList.LessonID)
+                        {
+                            this.FinishedLessons++;
+                        }
                     }
                 }
             }
-
-            if (this.FinishedLessons == this.TotalLessons)
-            {
-                Sprite sprite = Resources.Load<Sprite>("Textures/CompletedIcon");
-                this.thisStatusImage.sprite = sprite;
-
-                this.thisCourseProgressTMP.text = "Module Completed!";
-                this.thisCourseProgressTMP.color = Color.green;
-            }
-            else if (this.FinishedLessons > 0 && this.FinishedLessons!= this.TotalLessons)
-            {
-                Sprite sprite = Resources.Load<Sprite>("Textures/InProgressIcon");
-                this.thisStatusImage.sprite = sprite;
-
-                this.thisCourseProgressTMP.text = "In Progress";
-                this.thisCourseProgressTMP.color = Color.yellow;
-            }
-            else
-            {
-                this.thisStatusImage.sprite = null;
-                this.thisStatusImage.color = new Color32(0, 0 ,0 ,0);
-
-                this.thisCourseProgressTMP.text = "";
-                this.thisCourseProgressTMP.color = Color.white;
-            }
         }
 
+        if (this.FinishedLessons == this.TotalLessons)
+        {
+            Sprite sprite = Resources.Load<Sprite>("Textures/CompletedIcon");
+            this.thisStatusImage.sprite = sprite;
+
+            this.thisCourseProgressTMP.text = "Module Completed!";
+            this.thisCourseProgressTMP.color = Color.green;
+        }
+        else if (this.FinishedLessons > 0 && this.FinishedLessons!= this.TotalLessons)
+        {
+            Sprite sprite = Resources.Load<Sprite>("Textures/InProgressIcon");
+            this.thisStatusImage.sprite = sprite;
+
+            this.thisCourseProgressTMP.text = "In Progress";
+            this.thisCourseProgressTMP.color = Color.yellow;
+        }
+        else
+        {
+            this.thisStatusImage.sprite = null;
+            this.thisStatusImage.color = new Color32(0, 0, 0, 0);
+
+            this.thisCourseProgressTMP.text = "";
+            this.thisCourseProgressTMP.color = Color.white;
+        }
     }
 
     private void Clicked()

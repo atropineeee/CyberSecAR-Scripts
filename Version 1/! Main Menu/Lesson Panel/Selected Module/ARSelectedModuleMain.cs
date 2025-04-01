@@ -65,16 +65,16 @@ public class ARSelectedModuleMain : MonoBehaviour
 
         this.ARScriptHolderMain = GameObject.Find("ScriptsHolder").GetComponent<ARScriptHolderMain>();
 
-        this.thisLessonTitle.text = this.currentModuleTitle;
-        this.thisLessonContent.text = this.currentModuleContent;
-        this.currentModuleInt = Convert.ToInt32(this.currentModuleNumber);
-
         this.VideoPrefabLoc = GameObject.Find("Mid Air Stage");
 
         foreach (var mdl in this.ModulesData.ModuleList)
         {
             this.currentMaxModuleInt = mdl.ModuleLessons.Count;
         }
+
+        this.thisLessonTitle.text = this.currentModuleTitle;
+        this.thisLessonContent.text = this.currentModuleContent;
+        this.currentModuleInt = Convert.ToInt32(this.currentModuleNumber);
 
         this.ARSelectedModuleMenu = new ARSelectedModuleMenu(this);
 
@@ -91,41 +91,43 @@ public class ARSelectedModuleMain : MonoBehaviour
 
     private void NextModule()
     {
-        if (this.currentModuleInt < this.currentMaxModuleInt - 1)
+        if (this.IsClicked) { return; }
+        this.IsClicked = true;
+        StartCoroutine(ResetClicked());
+
+        if (this.currentModuleInt != this.currentMaxModuleInt)
         {
+            this.currentModuleInt++;
             var mdl = this.ModulesData.ModuleList.FirstOrDefault(m => m.ModuleName == this.currentCourseName);
-            if (mdl != null && this.currentModuleInt < mdl.ModuleLessons.Count - 1)
-            {
-                this.currentModuleInt++;
+            this.currentModuleTitle = mdl.ModuleLessons[this.currentModuleInt -1].LessonTitle;
+            this.currentModuleContent = mdl.ModuleLessons[this.currentModuleInt - 1].LessonContent;
+            this.currentModuleNumber = mdl.ModuleLessons[this.currentModuleInt - 1].LessonID;
 
-                this.currentModuleTitle = mdl.ModuleLessons[this.currentModuleInt].LessonTitle;
-                this.currentModuleContent = mdl.ModuleLessons[this.currentModuleInt].LessonContent;
-                this.currentModuleNumber = mdl.ModuleLessons[this.currentModuleInt].LessonID;
+            ResetList();
 
-                SyncUpdate();
-
-                RefreshText();
-            }
+            RefreshText();
+            SyncUpdate();
         }
     }
 
     private void PreviousModule()
     {
-        if (this.currentModuleInt > 0)
+        if (this.IsClicked) { return; }
+        this.IsClicked = true;
+        StartCoroutine(ResetClicked());
+
+        if (this.currentModuleInt != 1)
         {
+            this.currentModuleInt--;
             var mdl = this.ModulesData.ModuleList.FirstOrDefault(m => m.ModuleName == this.currentCourseName);
-            if (mdl != null && this.currentModuleInt > 0)
-            {
-                this.currentModuleInt--;
+            this.currentModuleTitle = mdl.ModuleLessons[this.currentModuleInt - 1].LessonTitle;
+            this.currentModuleContent = mdl.ModuleLessons[this.currentModuleInt - 1].LessonContent;
+            this.currentModuleNumber = mdl.ModuleLessons[this.currentModuleInt - 1].LessonID;
 
-                this.currentModuleTitle = mdl.ModuleLessons[this.currentModuleInt].LessonTitle;
-                this.currentModuleContent = mdl.ModuleLessons[this.currentModuleInt].LessonContent;
-                this.currentModuleNumber = mdl.ModuleLessons[this.currentModuleInt].LessonID;
+            ResetList();
 
-                SyncUpdate();
-
-                RefreshText();
-            }
+            RefreshText();
+            SyncUpdate();
         }
     }
 
@@ -136,6 +138,13 @@ public class ARSelectedModuleMain : MonoBehaviour
 
         this.thisLessonTitle.text = this.currentModuleTitle;
         this.thisLessonContent.text = this.currentModuleContent;
+    }
+
+    private void ResetList()
+    {
+        GameObject find = GameObject.Find("LessonListMain_Panel");
+        ARLessonListMain script = find.GetComponent<ARLessonListMain>();
+        script.CreateLessonsList();
     }
 
     private void SyncUpdate()
@@ -164,7 +173,7 @@ public class ARSelectedModuleMain : MonoBehaviour
     
     public IEnumerator ResetClicked()
     {
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(2.5f);
         this.IsClicked = false;
     }
 }

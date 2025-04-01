@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Firebase.Extensions;
+using System.Threading.Tasks;
 
 [Serializable]
 public class ARScriptSyncFinishedCourse
@@ -18,39 +19,13 @@ public class ARScriptSyncFinishedCourse
         ARScriptHolderMain = main;
     }
     #endregion
-
-    public DependencyStatus FirebaseStatus;
-    public FirebaseUser FirebaseUser;
-    public FirebaseFirestore FirebaseFirestore;
-    public DatabaseReference DatabaseReference;
-
-    public IEnumerator SyncFirebase()
+    public void SyncData()
     {
-        bool isDone = false;
 
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
-        {
-            FirebaseApp app = FirebaseApp.DefaultInstance;
-
-            if (task.IsCompleted)
-            {
-                this.FirebaseFirestore = FirebaseFirestore.DefaultInstance;
-
-                SyncData();
-
-                isDone = true;
-            }
-        });
-
-        yield return new WaitUntil(() => isDone);
-    }
-
-    private void SyncData()
-    {
         this.ARScriptHolderMain.PlayerData.FinishedCourseList.Clear();
         string CurrentEmail = this.ARScriptHolderMain.PlayerData.User_Email;
 
-        FirebaseFirestore.Collection("records").WhereEqualTo("email", CurrentEmail).GetSnapshotAsync().ContinueWithOnMainThread(task => 
+        this.ARScriptHolderMain.ARScriptFunction.FirebaseFirestore.Collection("records").WhereEqualTo("email", CurrentEmail).GetSnapshotAsync().ContinueWithOnMainThread(task => 
         {
             if (task.IsCompleted) 
             {

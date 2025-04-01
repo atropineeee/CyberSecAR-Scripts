@@ -44,6 +44,10 @@ public class ARMainMenuPanels
     public void CreateProfilePanel()
     {
         ARMainMenuMain.ResetCenterPanel();
+
+        GameObject create = ARMainMenuMain.Instantiate(this.ARMainMenuMain.ProfilePrefab);
+        create.transform.SetParent(this.ARMainMenuMain.CenterPanelLoc.transform, false);
+        create.name = "Profile_Panel";
     }
 
     public void CreateSettingsPanel()

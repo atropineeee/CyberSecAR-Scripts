@@ -56,7 +56,7 @@ public class ARLessonContentMain : MonoBehaviour
 
         this.thisParentButton.onClick.AddListener(ClickedMe);
 
-        if (IsPreviousFinished)
+        if (this.IsPreviousFinished)
         {
             if (this.IsFinished)
             {

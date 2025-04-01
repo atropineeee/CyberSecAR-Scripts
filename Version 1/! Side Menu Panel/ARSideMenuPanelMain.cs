@@ -141,6 +141,9 @@ public class ARSideMenuPanelMain : MonoBehaviour, IPointerClickHandler
         this.ARMainMenuMain.CurrentActivePanel = ActivePanels.Profile;
         this.ARMainMenuMain.ChangeTopLabel("Profile");
 
+        // Create Profile Panel
+        this.ARMainMenuMain.ARMainMenuPanels.CreateProfilePanel();
+
         this.Animator.SetTrigger("Close");
         Destroy(this.thisParentObject, 0.6f);
     }

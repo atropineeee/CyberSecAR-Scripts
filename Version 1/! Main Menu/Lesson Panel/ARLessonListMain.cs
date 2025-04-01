@@ -72,6 +72,11 @@ public class ARLessonListMain : MonoBehaviour
                     script.thisModuleContent = LessonData.LessonContent;
                     script.thisCourseName = LessonList.ModuleName;
 
+                    if (this.LessonCount == 0)
+                    {
+                        script.IsPreviousFinished = true;
+                    }
+
 
                     foreach (var LessonFinished in this.PlayerData.FinishedCourseList)
                     {
