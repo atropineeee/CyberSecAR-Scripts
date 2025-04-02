@@ -50,6 +50,7 @@ public class ARDashboardProgress : MonoBehaviour
 
         ARLessonListMain script = create.GetComponent<ARLessonListMain>();
         script.ModuleName = this.ModuleName;
+        script.AutoOpen = true;
     }
 
     private void ResetLessonPanel()

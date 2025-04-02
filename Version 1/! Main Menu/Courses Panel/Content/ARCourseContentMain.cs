@@ -52,13 +52,21 @@ public class ARCourseContentMain : MonoBehaviour
         this.CourseListMenuPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Courses Panel/CoursesMenu_List");
         this.CourseListMenuLessonPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Courses Panel/CourseMenu_LessonPanel");
 
-        this.thisCourseTMP.text = this.ModuleName;
+        this.thisCourseTMP.text = this.ModuleName + "\nCourse: " + this.ModuleNumber;
 
         this.thisParentButton.onClick.AddListener(Clicked);
         this.thisStartButton.onClick.AddListener(CreateLessonPanel);
 
         this.MainMenuCenterLoc = GameObject.Find("MainMenu_CenterPanel");
         this.LessonListPrefab = Resources.Load<GameObject>("! Panel Prefabs/Safe Area Panels/Main Menu Panel/Lesson Menu Panel/LessonListMain_Panel");
+
+        foreach (var mdl in this.ModulesData.ModuleList)
+        {
+            if (mdl.ModuleName == this.ModuleName)
+            {
+                this.TotalLessons = mdl.ModuleLessons.Count;
+            }
+        }
 
         SyncProgress();
     }
@@ -73,6 +81,42 @@ public class ARCourseContentMain : MonoBehaviour
 
         ARLessonListMain script = create.GetComponent<ARLessonListMain>();
         script.ModuleName = this.ModuleName;
+
+        StartCoroutine(OpenLessonPanel());
+    }
+
+    public IEnumerator OpenLessonPanel()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        if (this.FinishedLessons != this.TotalLessons)
+        {
+            GameObject find = GameObject.Find("LessonList_CenteredScrollList");
+
+            foreach (Transform child in find.transform)
+            {
+                if (child.name == "LessonList_CenteredContent")
+                {
+                    ARLessonContentMain script2 = child.GetComponent<ARLessonContentMain>();
+
+                    if (this.ModuleName == script2.thisCourseName)
+                    {
+                        if (this.FinishedLessons.ToString() == script2.thisModuleNumber)
+                        {
+                            script2.ClickedMe();
+                        }
+
+                        if (this.FinishedLessons.ToString() == "0")
+                        {
+                            if (script2.thisModuleNumber == "1")
+                            {
+                                script2.ClickedMe();
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void ResetLessonPanel()
@@ -92,8 +136,6 @@ public class ARCourseContentMain : MonoBehaviour
 
         foreach (var thisCourse in this.ModulesData.ModuleList)
         {
-            this.TotalLessons = thisCourse.ModuleLessons.Count;
-
             foreach (var thisCourseContent in thisCourse.ModuleLessons)
             {
                 foreach (var FinishedList in this.PlayerData.FinishedCourseList)
@@ -117,7 +159,7 @@ public class ARCourseContentMain : MonoBehaviour
             this.thisCourseProgressTMP.text = "Module Completed!";
             this.thisCourseProgressTMP.color = Color.green;
         }
-        else if (this.FinishedLessons > 0 && this.FinishedLessons!= this.TotalLessons)
+        else if (this.FinishedLessons > 0 && this.FinishedLessons != this.TotalLessons)
         {
             Sprite sprite = Resources.Load<Sprite>("Textures/InProgressIcon");
             this.thisStatusImage.sprite = sprite;
@@ -139,7 +181,6 @@ public class ARCourseContentMain : MonoBehaviour
     {
         if (!this.CanClick) return;
         this.CanClick = false;
-        StartCoroutine(ResetClick());
 
         if (!this.Toggled)
         {
@@ -162,7 +203,7 @@ public class ARCourseContentMain : MonoBehaviour
         GameObject courseMenuHolder = create.transform.Find("CourseMenu_ButtonHolder").gameObject;
         TMP_Text DescriptionTMP = create.transform.Find("CourseMenu_DescriptionTMP").GetComponent<TMP_Text>();
 
-        yield return StartCoroutine(TypeText(DescriptionTMP, this.ModuleDescription, 0.05f));
+        DescriptionTMP.text = this.ModuleDescription;
 
         foreach (var ModuleLessonList in this.ModuleLessons)
         {
@@ -175,12 +216,13 @@ public class ARCourseContentMain : MonoBehaviour
 
             yield return new WaitForSeconds(0.15f);
         }
+
+        yield return new WaitForSeconds(0.5f);
+        this.CanClick = true;
     }
 
     private IEnumerator CloseCourseMenu()
     {
-        List<GameObject> panelsToDestroy = new List<GameObject>();
-
         foreach (Transform child in this.thisParentObject.transform)
         {
             if (child.name == "CourseMenu_LessonPanel")
@@ -199,18 +241,13 @@ public class ARCourseContentMain : MonoBehaviour
                                 lessonAnimator.SetTrigger("Close");
                             }
 
-                            panelsToDestroy.Add(lessonPanel.gameObject);
+                            yield return new WaitForSeconds(0.15f);
+
+                            Destroy(lessonPanel.gameObject);
                         }
                     }
                 }
             }
-        }
-
-        yield return new WaitForSeconds(0.2f);
-
-        foreach (GameObject panel in panelsToDestroy)
-        {
-            Destroy(panel);
         }
 
         foreach (Transform child in this.thisParentObject.transform)
@@ -218,42 +255,13 @@ public class ARCourseContentMain : MonoBehaviour
             if (child.name == "CourseMenu_LessonPanel")
             {
                 TMP_Text DescriptionTMP = child.Find("CourseMenu_DescriptionTMP").GetComponent<TMP_Text>();
-                yield return StartCoroutine(EraseText(DescriptionTMP, 0.05f));
+                DescriptionTMP.text = "";
 
                 Destroy(child.gameObject);
             }
         }
-    }
 
-    private IEnumerator TypeText(TMP_Text textComponent, string text, float duration)
-    {
-        float timePerChar = duration / text.Length;
-        textComponent.text = "";
-
-        for (int i = 0; i < text.Length; i++)
-        {
-            textComponent.text += text[i];
-            yield return new WaitForSeconds(timePerChar);
-        }
-    }
-
-    private IEnumerator EraseText(TMP_Text textComponent, float duration)
-    {
-        float timePerChar = duration / textComponent.text.Length;
-        string originalText = textComponent.text;
-
-        for (int i = originalText.Length; i > 0; i--)
-        {
-            textComponent.text = originalText.Substring(0, i - 1);
-            yield return new WaitForSeconds(timePerChar);
-        }
-
-        textComponent.text = "";
-    }
-
-    private IEnumerator ResetClick()
-    {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         this.CanClick = true;
     }
 }

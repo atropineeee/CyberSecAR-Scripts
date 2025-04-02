@@ -25,6 +25,7 @@ public class ARLessonListMain : MonoBehaviour
     public int LessonCount = 0;
     public bool[] Finished;
     public bool IsClicked;
+    public bool AutoOpen;
 
     private void Start()
     {
@@ -46,6 +47,8 @@ public class ARLessonListMain : MonoBehaviour
         CreateLessonsList();
 
         this.thisModuleNameTMP.text = this.ModuleName + "\n(" + LessonCount + " Modules)";
+
+        StartCoroutine(OpenLessonPanel());
     }
 
     public void CreateLessonsList()
@@ -137,11 +140,33 @@ public class ARLessonListMain : MonoBehaviour
                     {
                         GameObject create2 = Instantiate(this.LessonFinPrefab);
                         create2.transform.SetParent(this.LessonListLoc.transform, false);
+                        create2.name = "LessonList_CenteredContentQuiz";
+
                         ARLessonFinished script2 = create2.GetComponent<ARLessonFinished>();
                         script2.thisCourseName = this.ModuleName;
                     }
 
                     this.LessonCount++;
+                }
+            }
+        }
+    }
+
+    private IEnumerator OpenLessonPanel()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        GameObject find = GameObject.Find("CoursesMenu_CenterScrollList");
+
+        foreach (Transform child in find.transform) 
+        {
+            ARCourseContentMain script = child.GetComponent<ARCourseContentMain>();
+
+            if (script != null)
+            {
+                if (this.ModuleName == script.ModuleName)
+                {
+                    StartCoroutine(script.OpenLessonPanel());
                 }
             }
         }

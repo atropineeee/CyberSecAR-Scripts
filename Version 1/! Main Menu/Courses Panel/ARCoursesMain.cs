@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ARCoursesMain : MonoBehaviour
@@ -25,17 +26,18 @@ public class ARCoursesMain : MonoBehaviour
     {
         ResetContents();
 
-        foreach(var Modules in this.ModulesData.ModuleList)
+        foreach (var Modules in this.ModulesData.ModuleList.OrderBy(m => m.ModuleNumber))
         {
             GameObject create = Instantiate(this.thisScrollPrefab);
             create.transform.SetParent(this.thisScrollLoc.transform, false);
-            
+
             ARCourseContentMain script = create.GetComponent<ARCourseContentMain>();
             script.ModuleNumber = Modules.ModuleNumber;
             script.ModuleName = Modules.ModuleName;
             script.ModuleDescription = Modules.ModuleDescription;
             script.ModuleLessons = Modules.ModuleLessons;
         }
+
     }
 
     private void ResetContents()

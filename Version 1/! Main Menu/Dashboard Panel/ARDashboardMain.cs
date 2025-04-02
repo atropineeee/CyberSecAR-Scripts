@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -78,37 +79,53 @@ public class ARDashboardMain : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        foreach (var modulelist in this.ModulesData.ModuleList)
+        var flessonCount = this.PlayerData.FinishedCourseList.Count;
+
+        if (flessonCount == 0)
         {
-            var lessonCount = modulelist.ModuleLessons.Count;
+            GameObject create = Instantiate(this.thisProgressPrefab1);
+            create.transform.SetParent(this.thisProgressLoc.transform, false);
+        }
+        else
+        {
+            bool anyModuleInProgress = false;
 
-            foreach (var fmodule in this.PlayerData.FinishedCourseList)
+            foreach (var modulelist in this.ModulesData.ModuleList)
             {
-                var flessonCount = this.PlayerData.FinishedCourseList.Count;
+                var lessonCount = modulelist.ModuleLessons.Count;
+                var similarLessonCount = 0;
+                bool created = false;
+                bool exist = false;
 
-                if (flessonCount == 0)
+                foreach (var fmodule in this.PlayerData.FinishedCourseList)
                 {
-                    GameObject create = Instantiate(this.thisProgressPrefab1);
-                    create.transform.SetParent(this.thisProgressLoc.transform, false);
-                    break;
+                    if (modulelist.ModuleName == fmodule.CourseID)
+                    {
+                        exist = true;
+                        similarLessonCount++;
+                    }
                 }
 
-                if (modulelist.ModuleName == fmodule.CourseID)
+                if (similarLessonCount != lessonCount)
                 {
-                    if (lessonCount != flessonCount)
+                    if (!created && exist)
                     {
+                        anyModuleInProgress = true;
+                        created = true;
                         GameObject create = Instantiate(this.thisProgressPrefab2);
                         create.transform.SetParent(this.thisProgressLoc.transform, false);
+                        create.name = modulelist.ModuleName;
 
                         ARDashboardProgress script = create.GetComponent<ARDashboardProgress>();
                         script.ModuleName = modulelist.ModuleName;
-                        break;
                     }
-
-                    GameObject create2 = Instantiate(this.thisProgressPrefab1);
-                    create2.transform.SetParent(this.thisProgressLoc.transform, false);
-                    break;
                 }
+            }
+
+            if (!anyModuleInProgress)
+            {
+                GameObject create2 = Instantiate(this.thisProgressPrefab1);
+                create2.transform.SetParent(this.thisProgressLoc.transform, false);
             }
         }
     }

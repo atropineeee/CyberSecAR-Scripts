@@ -34,19 +34,13 @@ public class ARLessonContentUpdate
             if (task.IsCompleted)
             {
                 this.FirebaseFirestore = FirebaseFirestore.DefaultInstance;
-                SyncData();
             }
         });
     }
 
-    private void SyncData()
+    public void SyncData()
     {
-        string CurrentEmail = this.ARLessonContentMain.PlayerData.User_Email;
-        string LessonID = this.ARLessonContentMain.thisModuleName;
-        string LessonContent = this.ARLessonContentMain.thisModuleContent;
-        string CourseID = this.ARLessonContentMain.thisCourseName;
-
-        FirebaseFirestore.Collection("records").WhereEqualTo("email", CurrentEmail).GetSnapshotAsync().ContinueWithOnMainThread(task => 
+        FirebaseFirestore.Collection("records").WhereEqualTo("email", this.ARLessonContentMain.CurrentEmail).GetSnapshotAsync().ContinueWithOnMainThread(task => 
         {
             if (task.IsCompleted)
             {
@@ -63,13 +57,13 @@ public class ARLessonContentUpdate
                         courseList = document.GetValue<List<Dictionary<string, object>>>("course") ?? new List<Dictionary<string, object>>();
                     }
 
-                    if (courseList.Any(course => course.ContainsKey("LessonID") && course["LessonID"].ToString() == LessonID)) { return; }
+                    if (courseList.Any(course => course.ContainsKey("LessonID") && course["LessonID"].ToString() == this.ARLessonContentMain.LessonID)) { return; }
 
                     var CourseData = new Dictionary<string, object>
                     {
-                        { "LessonID" , LessonID },
-                        { "LessonContent", LessonContent },
-                        { "CourseID", CourseID }
+                        { "LessonID" , this.ARLessonContentMain.LessonID },
+                        { "LessonContent", this.ARLessonContentMain.LessonContent },
+                        { "CourseID",this.ARLessonContentMain.CourseID }
                     };
 
                     courseList.Add(CourseData);

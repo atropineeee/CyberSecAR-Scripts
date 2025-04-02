@@ -69,7 +69,10 @@ public class ARSelectedModuleMain : MonoBehaviour
 
         foreach (var mdl in this.ModulesData.ModuleList)
         {
-            this.currentMaxModuleInt = mdl.ModuleLessons.Count;
+            if (mdl.ModuleName == currentCourseName)
+            {
+                this.currentMaxModuleInt = mdl.ModuleLessons.Count;
+            }
         }
 
         this.thisLessonTitle.text = this.currentModuleTitle;
@@ -87,13 +90,23 @@ public class ARSelectedModuleMain : MonoBehaviour
         this.thisMenuButton.onClick.AddListener(this.ARSelectedModuleMenu.OpenMenu);
         this.thisReturnButton.onClick.AddListener(this.ARSelectedModuleMenu.CloseMenu);
         this.thisSlider.onValueChanged.AddListener(value => this.ARSelectedModuleMenu.ChangeTextSize(value));
+
+        RefreshButton();
+        StartCoroutine(ResetClicked());
     }
 
     private void NextModule()
     {
         if (this.IsClicked) { return; }
         this.IsClicked = true;
+        this.thisNextButton.interactable = false;
+        this.thisPreviousButton.interactable = false;
         StartCoroutine(ResetClicked());
+
+        if (this.currentModuleInt == this.currentMaxModuleInt)
+        {
+            StartQuiz();
+        }
 
         if (this.currentModuleInt != this.currentMaxModuleInt)
         {
@@ -103,10 +116,9 @@ public class ARSelectedModuleMain : MonoBehaviour
             this.currentModuleContent = mdl.ModuleLessons[this.currentModuleInt - 1].LessonContent;
             this.currentModuleNumber = mdl.ModuleLessons[this.currentModuleInt - 1].LessonID;
 
-            ResetList();
-
             RefreshText();
             SyncUpdate();
+            RefreshButton();
         }
     }
 
@@ -114,6 +126,8 @@ public class ARSelectedModuleMain : MonoBehaviour
     {
         if (this.IsClicked) { return; }
         this.IsClicked = true;
+        this.thisNextButton.interactable = false;
+        this.thisPreviousButton.interactable = false;
         StartCoroutine(ResetClicked());
 
         if (this.currentModuleInt != 1)
@@ -124,10 +138,9 @@ public class ARSelectedModuleMain : MonoBehaviour
             this.currentModuleContent = mdl.ModuleLessons[this.currentModuleInt - 1].LessonContent;
             this.currentModuleNumber = mdl.ModuleLessons[this.currentModuleInt - 1].LessonID;
 
-            ResetList();
-
             RefreshText();
             SyncUpdate();
+            RefreshButton();
         }
     }
 
@@ -163,17 +176,51 @@ public class ARSelectedModuleMain : MonoBehaviour
                     {
                         if (!script.IsFinished && script.IsPreviousFinished)
                         {
-                            script.ARLessonContentUpdate.SyncFirebase();
+                            script.ARLessonContentUpdate.SyncData();
                         }
                     }
                 }
             }
         }
     }
+
+    private void StartQuiz()
+    {
+        GameObject find = GameObject.Find("LessonList_CenteredContentQuiz"); 
+        ARLessonFinished script = find.GetComponent<ARLessonFinished>();
+        script.CreateQuizPanel();
+    }
     
     public IEnumerator ResetClicked()
     {
-        yield return new WaitForSeconds(2.5f);
+        this.thisNextButton.interactable = false;
+        this.thisPreviousButton.interactable = false;
+
+        yield return new WaitForSeconds(1f);
+        ResetList();
+
+        yield return new WaitForSeconds(0.8f);
         this.IsClicked = false;
+        this.thisNextButton.interactable = true;
+        this.thisPreviousButton.interactable = true;
+    }
+
+    public void RefreshButton()
+    {
+        if (this.currentModuleInt == 1)
+        {
+            this.thisPreviousButton.gameObject.SetActive(false);
+            this.thisNextButton.gameObject.SetActive(true);
+        }
+        else if (this.currentModuleInt == this.currentMaxModuleInt) 
+        {
+            this.thisPreviousButton.gameObject.SetActive(true);
+            this.thisNextButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            this.thisPreviousButton.gameObject.SetActive(true);
+            this.thisNextButton.gameObject.SetActive(true);
+        }
     }
 }

@@ -33,6 +33,11 @@ public class ARLessonContentMain : MonoBehaviour
     public bool IsFinished;
     private bool IsClicked;
 
+    public string CurrentEmail;
+    public string LessonID;
+    public string LessonContent;
+    public string CourseID;
+
     private void Start()
     {
         this.thisParentObject = this.gameObject;
@@ -82,9 +87,16 @@ public class ARLessonContentMain : MonoBehaviour
 
             this.thisModuleStatusTMP.text = "";
         }
+
+        this.ARLessonContentUpdate.SyncFirebase();
+
+        this.CurrentEmail = this.PlayerData.User_Email;
+        this.LessonID = this.thisModuleName;
+        this.LessonContent = this.thisModuleContent;
+        this.CourseID = this.thisCourseName;
     }
 
-    private void ClickedMe()
+    public void ClickedMe()
     {
         if (this.IsClicked) { return; }
         this.IsClicked = true;
@@ -92,11 +104,11 @@ public class ARLessonContentMain : MonoBehaviour
         CreateObject(this.thisModuleNumber, this.thisModuleName, this.thisModuleContent, this.thisCourseName, this.ModulesData);
         if (!this.IsFinished && this.IsPreviousFinished)
         {
-            this.ARLessonContentUpdate.SyncFirebase();
+            this.ARLessonContentUpdate.SyncData();
         }
     }
 
-    private void CreateObject(string MNn, string MNm, string MCn,string CNm, ModulesSO MSo)
+    private void CreateObject(string MNn, string MNm, string MCn, string CNm, ModulesSO MSo)
     {
         GameObject create = Instantiate(this.LessonPanelPrefab);
         create.transform.SetParent(this.LessonPanelLoc.transform, false);
